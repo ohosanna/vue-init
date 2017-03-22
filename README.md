@@ -2,7 +2,6 @@
 ```
 vue + vue-router + webpack + sass 项目基本配置
 ```
-github:[https://github.com/lzxb/vue2-demo](https://github.com/lzxb/vue2-demo)
 
 ## 源码说明
 ### 项目目录说明
