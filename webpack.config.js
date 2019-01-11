@@ -38,7 +38,7 @@ var config = {
     publicPath: '/'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
         loader: 'vue-loader'

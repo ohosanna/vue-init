@@ -1,6 +1,7 @@
 var webpack = require('webpack'),
     path = require('path'),
     glob = require('glob'),
+    VueLoaderPlugin = require('vue-loader/lib/plugin'),
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     buildPath = path.resolve(__dirname, 'build');
@@ -34,7 +35,7 @@ var config = {
     filename: '[name].js?[hash]'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
         loader: 'vue-loader'
@@ -77,25 +78,34 @@ var config = {
       'vue$': 'vue/dist/vue.common.js'  //为了使用 template 选项，使用独立构建
     }
   },
+  optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					chunks: "initial",
+					minChunks: 2,
+					maxInitialRequests: 5, // The default limit is too small to showcase the effect
+					minSize: 0 // This is example is too small to create commons chunks
+				},
+				vendor: {
+					test: /node_modules/,
+					chunks: "initial",
+					name: "vendor",
+					priority: 10,
+					enforce: true
+				}
+			}
+		}
+	},
   plugins: [
+    new VueLoaderPlugin(),
     new ExtractTextPlugin({filename: 'style.css', allChunks: true }),
-    new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
-			chunks: chunks,
-			minChunks: chunks.length // 提取所有entry共同依赖的模块
-		}),
     //生产环境配置
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
       }
     }),
-    //删除代码块内的警告语句
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
   ]
 }
 
